@@ -138,6 +138,7 @@
     width: 31%;
     margin-left: 1px;
     border: 3px solid black;
+    overflow: scroll;
 }
 
 #users-chat-container{
@@ -147,8 +148,31 @@
     border: 3px solid black;
 }
 
-.users{
-    background-color: #000;
-    height: 99px;
-    margin: 3px;
+.users {
+    box-shadow: 0px 0px 5px rgb(98, 94, 94);
+    height: 105px;
+    margin: 9px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.whichUser{
+    box-shadow: 0px 0px 5px rgb(98, 94, 94);
+    height: 105px;
+    margin: 9px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.usersImg{
+    height:95px;
+    width: 95px;
+margin-left: 11px;
+border-radius: 50%;
+}
+
+.userName{
+margin-left: 12px;
 }

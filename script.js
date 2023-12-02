@@ -20,6 +20,8 @@ let authContainer = document.getElementsByClassName('auth-container');
 let chatAppContainer = document.getElementsByClassName('chat-app-container');
 let profileContainer = document.getElementsByClassName('profile-container');
 let inputs = document.getElementsByClassName('inputs');
+let chatUsersContainer = document.getElementById('chat-users-container');
+let usersChatContainer = document.getElementById('users-chat-container');
 
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
@@ -36,6 +38,8 @@ let db = getFirestore(app)
 let userId = '';
 let userName = '';
 
+// Aithentication code
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         // User is signed in, see docs for a list of available properties
@@ -44,9 +48,9 @@ onAuthStateChanged(auth, async (user) => {
         authContainer[0].style.display = 'none'
         loader.style.display = 'none';
         userId = user.uid;
+        getUser()
 
-        
-        let userNameObj = await getDoc(doc(db, 'userName', userId)) 
+        let userNameObj = await getDoc(doc(db, 'userName', userId))
 
         let { firstname, lastname } = userNameObj.data()
         userName = `${firstname} ${lastname}`
@@ -140,7 +144,7 @@ signInForm.addEventListener('submit', a => {
             const errorMessage = error.message;
             alert(errorMessage)
             chatAppContainer[0].style.display = 'none'
-                authContainer[0].style.display = 'flex'
+            authContainer[0].style.display = 'flex'
             signInPassword.value = '';
             signInPassword.style.borderColor = 'red';
             signInPassword.style.boxShadow = '0px 0px 5px red';
@@ -149,7 +153,6 @@ signInForm.addEventListener('submit', a => {
 
 }
 )
-
 
 loginTxt.addEventListener("click", function () {
     LoginDiv.style.display = 'block';
@@ -160,3 +163,46 @@ signupTxt.addEventListener("click", function () {
     LoginDiv.style.display = 'none';
     signUpDiv.style.display = 'block';
 })
+
+// Chat app code
+
+async function getUser() {
+    chatUsersContainer.innerHTML = null;
+
+
+    let users = await getDocs(collection(db, 'userName'))
+
+    users.forEach(element => {
+        let div = `
+        <div class="users">
+            <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
+        </div>
+        `
+        chatUsersContainer.innerHTML += div;
+    });
+
+    let usersDiv = document.getElementsByClassName('users');
+
+    for (let i = 0; i < usersDiv.length; i++) {
+        usersDiv[i].addEventListener("click", function () {
+            usersChatContainer.innerHTML = null;
+
+            for (let i = 0; i < usersDiv.length; i++) {
+                usersDiv[i].style.backgroundColor = 'white'
+            }
+            this.style.backgroundColor = 'rgb(233, 232, 232)';
+
+            let div = `
+            <div class="users" id="whichUser">
+                <img class="usersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+                <h1 class="userName">${this.childNodes[3].innerText}</h1>
+            </div>`
+
+            usersChatContainer.innerHTML = div;
+
+        })
+    }
+
+}
+
