@@ -141,7 +141,7 @@
     overflow: scroll;
 }
 
-#users-chat-container{
+#user-chat-container{
     height: 99.4vh;
     width: 69%;
     margin-right: 1px;
@@ -175,4 +175,14 @@ border-radius: 50%;
 
 .userName{
 margin-left: 12px;
+}
+
+#user-chats-container{
+    height: 71vh;
+    width: 100%;
+    overflow: scroll;
+}
+#userMsg{
+    width: 100%;
+    height: 11vh;
 }

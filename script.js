@@ -21,7 +21,7 @@ let chatAppContainer = document.getElementsByClassName('chat-app-container');
 let profileContainer = document.getElementsByClassName('profile-container');
 let inputs = document.getElementsByClassName('inputs');
 let chatUsersContainer = document.getElementById('chat-users-container');
-let usersChatContainer = document.getElementById('users-chat-container');
+let chatWhichUserContainer = document.getElementById('chat-which-user-container');
 
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
@@ -30,13 +30,14 @@ const firebaseConfig = {
     storageBucket: "chat-app-9e4d1.appspot.com",
     messagingSenderId: "339356442836",
     appId: "1:339356442836:web:378dc157ce38c092efdb41"
-};
+  };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 let db = getFirestore(app)
 let userId = '';
 let userName = '';
+let anotherUserId = '';
 
 // Aithentication code
 
@@ -93,7 +94,8 @@ signUpForm.addEventListener('submit', a => {
                     firstname: signUpUserName.value,
                     lastname: signUpUserLastName.value,
                     userImg: '',
-                    userEmail: userCredential.user.email
+                    userEmail: userCredential.user.email,
+                    userId:userId
                 })
 
                 for (let i = 0; i < inputs.length; i++) {
@@ -174,7 +176,7 @@ async function getUser() {
 
     users.forEach(element => {
         let div = `
-        <div class="users">
+        <div id="${element.data().userId}" class="users">
             <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
             <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
         </div>
@@ -186,20 +188,23 @@ async function getUser() {
 
     for (let i = 0; i < usersDiv.length; i++) {
         usersDiv[i].addEventListener("click", function () {
-            usersChatContainer.innerHTML = null;
-
+            chatWhichUserContainer.innerHTML = null;
             for (let i = 0; i < usersDiv.length; i++) {
                 usersDiv[i].style.backgroundColor = 'white'
             }
-            this.style.backgroundColor = 'rgb(233, 232, 232)';
 
+            this.style.backgroundColor = 'rgb(233, 232, 232)'
+
+            
             let div = `
-            <div class="users" id="whichUser">
-                <img class="usersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
-                <h1 class="userName">${this.childNodes[3].innerText}</h1>
+            <div class="whichUser">
+            <img class="usersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <h1 class="userName">${this.childNodes[3].innerText}</h1>
             </div>`
+            
+            anotherUserId = this.id;
 
-            usersChatContainer.innerHTML = div;
+            chatWhichUserContainer.innerHTML = div?div:'No users';
 
         })
     }
