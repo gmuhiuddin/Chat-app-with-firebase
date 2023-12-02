@@ -11,7 +11,7 @@
 
 
 .container{
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -20,23 +20,23 @@
 
 #sign-up {
     box-shadow: 1px 1px 7px black;
-    height: 479px;
-    width: 389px;
+    height: 485px;
+    width: 419px;
     display: block;
 }
 
 #sign-in {
     box-shadow: 1px 1px 7px black;
-    height: 309px;
-    width: 389px;
+    height: 319px;
+    width: 419px;
     display: none;
 }
 
-.input {
+.inputs {
     display: block;
     margin: 0 auto;
-    width: 219px;
-    height: 29px;
+    width: 239px;
+    height: 31px;
     border-radius: 9px;
     padding: 1px 9px;
     box-shadow: none;
@@ -112,4 +112,43 @@
 
 .auth-txt{  
     text-align: center;
+    color: rgb(56, 54, 54);
+}
+
+.auth-container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.profile-container{
+    display: none;
+}
+
+.chat-app-container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#chat-users-container{
+    height: 99.4vh;
+    width: 31%;
+    margin-left: 1px;
+    border: 3px solid black;
+}
+
+#users-chat-container{
+    height: 99.4vh;
+    width: 69%;
+    margin-right: 1px;
+    border: 3px solid black;
+}
+
+.users{
+    background-color: #000;
+    height: 99px;
+    margin: 3px;
 }

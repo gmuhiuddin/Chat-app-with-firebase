@@ -4,29 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat-app</title>
-    <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ9T4TSCiOBQms5_NTaXIfz2iKGDfifewX7Q&usqp=CAU" type="image/x-icon">
+    <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgb7NbndyulZT5WVMd8CLFQ4K2-Ayw7ArBg&usqp=CAU" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
+        <div id="loader">
+            <div class="loader"></div>
+        </div>
         <div class="auth-container">
             <div id="sign-up">
                 <br>
                 <h1 class="auth-txt">Sign up</h1>
                 <form id="sign-up-form">
                     <br>
-                    <input minlength="3" class="input" type="text" placeholder="First Name" required
+                    <input minlength="3" class="inputs" type="text" placeholder="First Name" required
                         id="sign-up-user-first-name" />
                     <br>
-                    <input minlength="3" class="input" type="text" placeholder="Last Name" required
+                    <input minlength="3" class="inputs" type="text" placeholder="Last Name" required
                         id="sign-up-user-last-name" />
                     <br>
-                    <input class="input" type="email" placeholder="Email" required id="sign-up-user-email">
+                    <input class="inputs" type="email" placeholder="Email" required id="sign-up-user-email">
                     <br>
-                    <input class="input" minlength="8" placeholder="Password" type="password" required
+                    <input class="inputs" minlength="8" placeholder="Password" type="password" required
                         id="sign-up-user-password">
                     <br>
-                    <input class="input" minlength="8" placeholder="Repeat Password" type="password" required
+                    <input class="inputs" minlength="8" placeholder="Repeat Password" type="password" required
                         id="sign-up-user-repeat-password">
                     <br>
                     <button type="submit" id="sign-up-btn">Sign up</button>
@@ -39,9 +42,9 @@
                 <h1 class="auth-txt">Login</h1>
                 <form id="sign-in-form">
                     <br>
-                    <input class="input" type="email" placeholder="Email" required id="user-email">
+                    <input class="inputs" type="email" placeholder="Email" required id="user-email">
                     <br>
-                    <input class="input" minlength="8" placeholder="Password" type="password" required id="user-password">
+                    <input class="inputs" minlength="8" placeholder="Password" type="password" required id="user-password">
                     <br>
                     <button type="submit" id="sign-in-btn">Login</button>
                 </form>
@@ -49,8 +52,17 @@
                 <p class="txt">You don`t have an account <a id="signup-txt">Sign up</a></p>
             </div>
         </div>
-        <div class="profile-container"></div>
-        <div class="chat-app-container"></div>
+        <div class="profile-container">
+            <h1>Profile contaienr</h1>
+        </div>
+        <div class="chat-app-container">
+            <div id="chat-users-container">
+                <div class="users" id="you" ></div>
+            </div>
+            <div id="users-chat-container">
+                <div class="users" id="whichUser"></div>
+            </div>
+        </div>
     </div>
     <script type="module" src="script.js"></script>
 </body>

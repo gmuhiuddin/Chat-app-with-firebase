@@ -11,41 +11,53 @@ let signInEmail = document.getElementById('user-email');
 let signInPassword = document.getElementById('user-password');
 let signUpForm = document.getElementById('sign-up-form');
 let signInForm = document.getElementById('sign-in-form');
-let container = document.getElementsByClassName('container');
 let loginTxt = document.getElementById('login-txt');
 let signupTxt = document.getElementById('signup-txt');
-let signUpDiv = document.getElementById('sign-up')
-let LoginDiv = document.getElementById('sign-in')
+let signUpDiv = document.getElementById('sign-up');
+let LoginDiv = document.getElementById('sign-in');
+let loader = document.getElementById('loader');
+let authContainer = document.getElementsByClassName('auth-container');
+let chatAppContainer = document.getElementsByClassName('chat-app-container');
+let profileContainer = document.getElementsByClassName('profile-container');
+let inputs = document.getElementsByClassName('inputs');
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDMeG-Yt8eUI3eoSEbLokIk9Fo_fCRTZ3k",
-    authDomain: "blog-app-9f834.firebaseapp.com",
-    projectId: "blog-app-9f834",
-    storageBucket: "blog-app-9f834.appspot.com",
-    messagingSenderId: "114009764949",
-    appId: "1:114009764949:web:3c7974840f125054e290dc",
-    measurementId: "G-K5QB7B6K9N"
+    apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
+    authDomain: "chat-app-9e4d1.firebaseapp.com",
+    projectId: "chat-app-9e4d1",
+    storageBucket: "chat-app-9e4d1.appspot.com",
+    messagingSenderId: "339356442836",
+    appId: "1:339356442836:web:378dc157ce38c092efdb41"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 let db = getFirestore(app)
+let userId = '';
+let userName = '';
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        // BlogAppContainer.style.display = 'block'
-        // container[0].style.display = 'none'
-        // loader.style.display = 'none';
-        // userId = user.uid;
+        chatAppContainer[0].style.display = 'flex'
+        authContainer[0].style.display = 'none'
+        loader.style.display = 'none';
+        userId = user.uid;
+
+        
+        let userNameObj = await getDoc(doc(db, 'userName', userId)) 
+
+        let { firstname, lastname } = userNameObj.data()
+        userName = `${firstname} ${lastname}`
+
         // ...
     } else {
         // User is signed out
         // ...
-        // BlogAppContainer.style.display = 'none';
-        // container[0].style.display = 'flex';
-        // loader.style.display = 'none';
+        chatAppContainer[0].style.display = 'none';
+        authContainer[0].style.display = 'flex';
+        loader.style.display = 'none';
     }
 });
 
@@ -70,8 +82,8 @@ signUpForm.addEventListener('submit', a => {
             .then(async (userCredential) => {
                 // Signed up 
                 userId = userCredential.user.uid;
-                BlogAppContainer.style.display = 'block'
-                container[0].style.display = 'none'
+                chatAppContainer[0].style.display = 'flex'
+                authContainer[0].style.display = 'none'
 
                 await setDoc(doc(db, 'userName', userId), {
                     firstname: signUpUserName.value,
@@ -88,10 +100,10 @@ signUpForm.addEventListener('submit', a => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorMessage)
+                alert(errorMessage)
 
-                BlogAppContainer.style.display = 'none'
-                container[0].style.display = 'flex'
+                chatAppContainer[0].style.display = 'none'
+                authContainer[0].style.display = 'flex'
 
                 for (let i = 0; i < inputs.length; i++) {
                     inputs[i].value = ''
@@ -109,12 +121,14 @@ signUpForm.addEventListener('submit', a => {
 signInForm.addEventListener('submit', a => {
     a.preventDefault()
 
-    signInWithEmailAndPassword(auth, signInEmail.value, signInPassword.value, signUpUserName.value)
+    signInWithEmailAndPassword(auth, signInEmail.value, signInPassword.value)
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            BlogAppContainer.style.display = 'block'
-            container[0].style.display = 'none'
+            userId = user.uid;
+            chatAppContainer[0].style.display = 'flex';
+            authContainer[0].style.display = 'none';
+
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].value = ''
             }
@@ -124,7 +138,9 @@ signInForm.addEventListener('submit', a => {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-
+            alert(errorMessage)
+            chatAppContainer[0].style.display = 'none'
+                authContainer[0].style.display = 'flex'
             signInPassword.value = '';
             signInPassword.style.borderColor = 'red';
             signInPassword.style.boxShadow = '0px 0px 5px red';
@@ -135,12 +151,12 @@ signInForm.addEventListener('submit', a => {
 )
 
 
-loginTxt.addEventListener("click",function (){
+loginTxt.addEventListener("click", function () {
     LoginDiv.style.display = 'block';
-signUpDiv.style.display = 'none';
+    signUpDiv.style.display = 'none';
 })
 
-signupTxt.addEventListener("click",function (){
+signupTxt.addEventListener("click", function () {
     LoginDiv.style.display = 'none';
-signUpDiv.style.display = 'block';
+    signUpDiv.style.display = 'block';
 })
