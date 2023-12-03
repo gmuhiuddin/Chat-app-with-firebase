@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
 import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc, getDoc, getDocs, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc, getDoc, getDocs, updateDoc, query, where, serverTimestamp, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
 let signUpUserName = document.getElementById('sign-up-user-first-name');
 let signUpUserLastName = document.getElementById('sign-up-user-last-name');
@@ -23,9 +23,9 @@ let inputs = document.getElementsByClassName('inputs');
 let chatUsersContainer = document.getElementById('chat-users-container');
 let chatWhichUserContainer = document.getElementById('chat-which-user-container');
 let userMsgContainer = document.getElementById('user-msg-container');
-let userChatsContainer = document.getElementById('user-chats-container');
+let userChatsContainer = document.getElementById('users-chats-container');
 let logoutBtn = document.getElementById('logout-btn');
-
+let msgform = document.getElementById('msg-form');
 
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
@@ -42,6 +42,7 @@ let db = getFirestore(app)
 let userId = '';
 let userName = '';
 let anotherUserId = '';
+let chatCollectionRef = collection(db, "userMsgs")
 
 // Aithentication code
 
@@ -178,66 +179,67 @@ async function getUser() {
 
     chatUsersContainer.innerHTML = null;
 
-    let userNameObj = await getDoc(doc(db, 'userName', userId))
-
-    let { firstname, lastname } = userNameObj.data()
-
-    let q = query(collection(db, 'userName'), where("firstname", "==", firstname), where("lastname", "==", lastname))
+    let q = query(collection(db, 'userName'), where("userId", "==", userId))
 
     let you = await getDocs(q)
-you.forEach(element => {
-    let div = `
+
+    you.forEach(element => {
+        let div = `
         <div id="${element.data().userId}" class="users">
             <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
             <h2 class="userName">${element.data().firstname} ${element.data().lastname} (You)</h2>
         </div>
         `
+        chatUsersContainer.innerHTML = div;
+    });
 
-    chatUsersContainer.innerHTML = div;
-});
-    
+    let q2 = query(collection(db, 'userName'), where("userId", "!=", userId))
 
+    let users = await getDocs(q2)
 
-    // let users = await getDocs(q)
+    users.forEach(element => {
 
-    // users.forEach(element => {
+        let div = `
+        <div id="${element.data().userId}" class="users">
+            <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
+        </div>
+        `
+        chatUsersContainer.innerHTML += div;
 
-    //         let div = `
-    //     <div id="${element.data().userId}" class="users">
-    //         <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
-    //         <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
-    //     </div>
-    //     `
-    //     chatUsersContainer.innerHTML += div;
+    });
 
+    let usersDiv = document.getElementsByClassName('users');
 
-    // });
+    for (let i = 0; i < usersDiv.length; i++) {
 
-    // let usersDiv = document.getElementsByClassName('users');
+        usersDiv[i].addEventListener("click", function () {
 
-    // for (let i = 0; i < usersDiv.length; i++) {
-    //     usersDiv[i].addEventListener("click", function () {
-    //         chatWhichUserContainer.innerHTML = null;
-    //         for (let i = 0; i < usersDiv.length; i++) {
-    //             usersDiv[i].style.backgroundColor = 'white'
-    //         }
+            chatWhichUserContainer.innerHTML = null;
 
-    //         this.style.backgroundColor = 'rgb(233, 232, 232)'
+            for (let i = 0; i < usersDiv.length; i++) {
+                usersDiv[i].style.backgroundColor = 'white'
+            }
 
-    //         userMsgContainer.style.display = 'flex';
-    //         userChatsContainer.style.display = 'block';
+            this.style.backgroundColor = 'rgb(233, 232, 232)'
 
-    //         let div = `
-    //         <div class="whichUser">
-    //         <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
-    //         <h1 class="userName">${this.childNodes[3].innerText}</h1>
-    //         </div>`
+            userMsgContainer.style.display = 'flex';
+            userChatsContainer.style.display = 'block';
+            chatWhichUserContainer.style.display = 'block';
 
-    //         anotherUserId = this.id;
+            let div = `
+            <div class="whichUser">
+            <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <h1 class="userName">${this.childNodes[3].innerText}</h1>
+            </div>`
 
-    //         chatWhichUserContainer.innerHTML = div;
-    //     })
-    // }
+            anotherUserId = this.id;
+
+            chatWhichUserContainer.innerHTML = div;
+            getMsgs()
+
+        })
+    }
 
 }
 
@@ -251,9 +253,45 @@ function logoutFunc() {
         authContainer[0].style.display = 'flex'
         profileContainer[0].style.display = 'none'
         logoutBtn.style.display = 'none'
+        userMsgContainer.style.display = 'none';
+        userChatsContainer.style.display = 'none';
+        chatWhichUserContainer.style.display = 'none';
 
     }).catch((error) => {
         // An error happened.
         alert(error.message)
     });
+}
+
+msgform.addEventListener('submit', async (submitedForm) => {
+    submitedForm.preventDefault()
+
+    let obj = {
+        userMsg: submitedForm.target[0].value,
+        userId: userId,
+        otherUser: anotherUserId,
+        time: serverTimestamp()
+    }
+
+    await addDoc(chatCollectionRef, obj)
+
+    submitedForm.target[0].value = '';
+
+})
+
+async function getMsgs (){
+
+     let usersMsg = query(chatCollectionRef,orderBy('time'),where("userId","==",userId),where("otherUser","==",anotherUserId))
+
+onSnapshot(usersMsg,(doc) => {
+    userChatsContainer.innerHTML = null;
+    if(!doc.empty){
+        doc.forEach((elements) => {
+        
+        })
+    }else{
+        userChatsContainer.innerHTML = "<h1>No chats</h1>"
+    }
+})
+
 }

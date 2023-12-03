@@ -187,7 +187,6 @@
 #user-chats-container {
     height: 71vh;
     width: 100%;
-    overflow: scroll;
     display: none;
 }
 
@@ -236,4 +235,15 @@
     background-color: red;
     cursor: pointer;
     color: white;
+}
+
+#chat-which-user-container{
+display: none;
+}
+
+#users-chats-container{
+    display: none;
+    height:71vh;
+    width: 100%;
+    overflow: scroll;
 }
