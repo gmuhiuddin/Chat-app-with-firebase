@@ -194,13 +194,13 @@
     display: none;
     align-items: center;
     width: 100%;
-    height: 10.5vh;
+    height: 12.9vh;
 }
 
 .user-msg {
-    height: 47px;
-    width: 799px;
-    margin-left: 45px;
+    height: 51px;
+    width: 53vw;
+    margin-left: 49px;
     border-radius: 21px;
     border: none;
     outline: none;
@@ -210,11 +210,11 @@
 }
 
 .msg-send-btn {
-    height: 49px;
-    width: 119px;
+    height: 53px;
+    width: 7.9vw;
     cursor: pointer;
     border-radius: 25px;
-    font-size: 19px;
+    font-size: 21px;
     border: none;
     box-shadow: 0px 0px 5px rgb(64, 234, 64);
     background-color: rgb(64, 234, 64);
@@ -222,7 +222,7 @@
     margin-left: 19px;
 }
 
-#logout-btn{
+#logout-btn {
     position: fixed;
     right: 1.9%;
     top: 3%;
@@ -237,46 +237,46 @@
     color: white;
 }
 
-#chat-which-user-container{
-display: none;
+#chat-which-user-container {
+    display: none;
 }
 
-#users-chats-container{
+#users-chats-container {
     display: none;
-    height:71vh;
+    height: 71vh;
     width: 100%;
     overflow: scroll;
 }
 
-#no-chat-display-container{
+#no-chat-display-container {
     height: 99vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.chats{
+.chats {
     margin-left: 19px;
     margin-right: 19px;
-display: inline-block;
-padding: 9px;
-margin: 9px;
-border-radius: 19px;
+    display: inline-block;
+    padding: 9px;
+    margin: 9px;
+    border-radius: 19px;
 }
 
-.user-messsage{
+.user-messsage {
     font-size: 23px;
 }
-.chat-time{
+
+.chat-time {
     margin-left: 3px;
     margin-right: 3px;
 }
 
-.userChat{
-    background-color: green;
+.userChat {
+    background-color: rgb(158, 230, 158);
 }
 
-.anotherUserChat{
-    background-color: gray;
-
+.anotherUserChat {
+    background-color: rgb(176, 169, 169);
 }
