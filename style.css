@@ -225,7 +225,7 @@
 #logout-btn {
     position: fixed;
     right: 1.9%;
-    top: 3%;
+    top: 5%;
     display: none;
     height: 39px;
     width: 109px;
@@ -274,7 +274,8 @@
 }
 
 .userChat {
-    background-color: rgb(158, 230, 158);
+    background-color: rgb(158, 230, 158);   
+    margin-left: 81.5%;
 }
 
 .anotherUserChat {

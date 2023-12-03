@@ -280,6 +280,10 @@ msgform.addEventListener('submit', async (submitedForm) => {
 
     submitedForm.target[0].value = '';
 
+    setTimeout(() => {
+        userChatsContainer.scrollTop = userChatsContainer.scrollHeight;
+
+    }, 100);
 })
 
 function generateChatId() {
@@ -301,7 +305,7 @@ async function getMsgs() {
     <div class="chats ${elements.data().userId == userId ? 'userChat' : 'anotherUserChat'}">
     <span class="user-messsage">${elements.data().userMsg}</span>
     <br>
-    <span class="chat-time">${dayjs(elements.data().time.toDate()).format('ddd-MM-YYYY hh:mm')}</span>
+    <span class="chat-time">${dayjs(elements.data().time.toDate()).format('DD-MM-YYYY hh:mm')}</span>
     </div>
     <br>
 `
