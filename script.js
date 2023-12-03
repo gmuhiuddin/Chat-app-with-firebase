@@ -52,13 +52,14 @@ onAuthStateChanged(auth, async (user) => {
         chatAppContainer[0].style.display = 'flex'
         authContainer[0].style.display = 'none'
         loader.style.display = 'none';
+        logoutBtn.style.display = 'block'
         userId = user.uid;
-        
+
         let userNameObj = await getDoc(doc(db, 'userName', userId))
-        
+
         let { firstname, lastname } = userNameObj.data()
         userName = `${firstname} ${lastname}`
-        
+
         getUser()
         // ...
     } else {
@@ -67,6 +68,7 @@ onAuthStateChanged(auth, async (user) => {
         chatAppContainer[0].style.display = 'none';
         authContainer[0].style.display = 'flex';
         loader.style.display = 'none';
+        logoutBtn.style.display = 'none'
     }
 });
 
@@ -173,74 +175,85 @@ signupTxt.addEventListener("click", function () {
 // Chat app code
 
 async function getUser() {
+
     chatUsersContainer.innerHTML = null;
 
-    let users = await getDocs(collection(db, 'userName'))
+    let userNameObj = await getDoc(doc(db, 'userName', userId))
 
-    users.forEach(element => {
-        if (`${element.data().firstname} ${element.data().lastname}` == userName) {
-            let div = `
+    let { firstname, lastname } = userNameObj.data()
+
+    let q = query(collection(db, 'userName'), where("firstname", "==", firstname), where("lastname", "==", lastname))
+
+    let you = await getDocs(q)
+you.forEach(element => {
+    let div = `
         <div id="${element.data().userId}" class="users">
             <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
             <h2 class="userName">${element.data().firstname} ${element.data().lastname} (You)</h2>
         </div>
         `
-        chatUsersContainer.innerHTML = div;
-            // chatUsersContainer.innerHTML = "<h1 style='text-align:center; mauserMsgContainerrgin-top:19px;' >User no found</h1>"
-            userMsgContainer.style.display = 'none';
-            userChatsContainer.style.display = 'none';
-        } else {
-            let div = `
-        <div id="${element.data().userId}" class="users">
-            <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
-            <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
-        </div>
-        `
-        chatUsersContainer.innerHTML += div;
-    }
 
-    });
+    chatUsersContainer.innerHTML = div;
+});
+    
 
-    let usersDiv = document.getElementsByClassName('users');
 
-    for (let i = 0; i < usersDiv.length; i++) {
-        usersDiv[i].addEventListener("click", function () {
-            chatWhichUserContainer.innerHTML = null;
-            for (let i = 0; i < usersDiv.length; i++) {
-                usersDiv[i].style.backgroundColor = 'white'
-            }
+    // let users = await getDocs(q)
 
-            this.style.backgroundColor = 'rgb(233, 232, 232)'
+    // users.forEach(element => {
 
-            userMsgContainer.style.display = 'flex';
-            userChatsContainer.style.display = 'block';
+    //         let div = `
+    //     <div id="${element.data().userId}" class="users">
+    //         <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+    //         <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
+    //     </div>
+    //     `
+    //     chatUsersContainer.innerHTML += div;
 
-            let div = `
-            <div class="whichUser">
-            <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
-            <h1 class="userName">${this.childNodes[3].innerText}</h1>
-            </div>`
 
-            anotherUserId = this.id;
+    // });
 
-            chatWhichUserContainer.innerHTML = div;
-        })
-    }
+    // let usersDiv = document.getElementsByClassName('users');
+
+    // for (let i = 0; i < usersDiv.length; i++) {
+    //     usersDiv[i].addEventListener("click", function () {
+    //         chatWhichUserContainer.innerHTML = null;
+    //         for (let i = 0; i < usersDiv.length; i++) {
+    //             usersDiv[i].style.backgroundColor = 'white'
+    //         }
+
+    //         this.style.backgroundColor = 'rgb(233, 232, 232)'
+
+    //         userMsgContainer.style.display = 'flex';
+    //         userChatsContainer.style.display = 'block';
+
+    //         let div = `
+    //         <div class="whichUser">
+    //         <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+    //         <h1 class="userName">${this.childNodes[3].innerText}</h1>
+    //         </div>`
+
+    //         anotherUserId = this.id;
+
+    //         chatWhichUserContainer.innerHTML = div;
+    //     })
+    // }
 
 }
 
-// logoutBtn.addEventListener("click",logoutFunc)
+logoutBtn.addEventListener("click", logoutFunc)
 
-// function logoutFunc() {
+function logoutFunc() {
 
-//     signOut(auth).then(() => {
-//         // Sign-out successful.
-//         chatAppContainer[0].style.display = 'none'
-//         authContainer[0].style.display = 'flex'
-//         profileContainer.style.display = 'none'
+    signOut(auth).then(() => {
+        // Sign-out successful.
+        chatAppContainer[0].style.display = 'none'
+        authContainer[0].style.display = 'flex'
+        profileContainer[0].style.display = 'none'
+        logoutBtn.style.display = 'none'
 
-//     }).catch((error) => {
-//         // An error happened.
-//         alert(error.message)
-//     });
-// }
+    }).catch((error) => {
+        // An error happened.
+        alert(error.message)
+    });
+}

@@ -225,11 +225,12 @@
 
 #logout-btn{
     position: fixed;
-    right: 3%;
+    right: 1.9%;
     top: 3%;
+    display: none;
     height: 39px;
-    width: 99px;
-    border-radius: 15px;
+    width: 109px;
+    border-radius: 19px;
     border: none;
     font-size: 19px;
     background-color: red;
