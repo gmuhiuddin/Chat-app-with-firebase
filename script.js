@@ -22,6 +22,10 @@ let profileContainer = document.getElementsByClassName('profile-container');
 let inputs = document.getElementsByClassName('inputs');
 let chatUsersContainer = document.getElementById('chat-users-container');
 let chatWhichUserContainer = document.getElementById('chat-which-user-container');
+let userMsgContainer = document.getElementById('user-msg-container');
+let userChatsContainer = document.getElementById('user-chats-container');
+let logoutBtn = document.getElementById('logout-btn');
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
@@ -30,7 +34,7 @@ const firebaseConfig = {
     storageBucket: "chat-app-9e4d1.appspot.com",
     messagingSenderId: "339356442836",
     appId: "1:339356442836:web:378dc157ce38c092efdb41"
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -49,13 +53,13 @@ onAuthStateChanged(auth, async (user) => {
         authContainer[0].style.display = 'none'
         loader.style.display = 'none';
         userId = user.uid;
-        getUser()
-
+        
         let userNameObj = await getDoc(doc(db, 'userName', userId))
-
+        
         let { firstname, lastname } = userNameObj.data()
         userName = `${firstname} ${lastname}`
-
+        
+        getUser()
         // ...
     } else {
         // User is signed out
@@ -95,7 +99,7 @@ signUpForm.addEventListener('submit', a => {
                     lastname: signUpUserLastName.value,
                     userImg: '',
                     userEmail: userCredential.user.email,
-                    userId:userId
+                    userId: userId
                 })
 
                 for (let i = 0; i < inputs.length; i++) {
@@ -171,17 +175,30 @@ signupTxt.addEventListener("click", function () {
 async function getUser() {
     chatUsersContainer.innerHTML = null;
 
-
     let users = await getDocs(collection(db, 'userName'))
 
     users.forEach(element => {
-        let div = `
+        if (`${element.data().firstname} ${element.data().lastname}` == userName) {
+            let div = `
+        <div id="${element.data().userId}" class="users">
+            <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <h2 class="userName">${element.data().firstname} ${element.data().lastname} (You)</h2>
+        </div>
+        `
+        chatUsersContainer.innerHTML = div;
+            // chatUsersContainer.innerHTML = "<h1 style='text-align:center; mauserMsgContainerrgin-top:19px;' >User no found</h1>"
+            userMsgContainer.style.display = 'none';
+            userChatsContainer.style.display = 'none';
+        } else {
+            let div = `
         <div id="${element.data().userId}" class="users">
             <img class="usersImg" src="${element.data().userImg ? element.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
             <h2 class="userName">${element.data().firstname} ${element.data().lastname}</h2>
         </div>
         `
         chatUsersContainer.innerHTML += div;
+    }
+
     });
 
     let usersDiv = document.getElementsByClassName('users');
@@ -195,19 +212,35 @@ async function getUser() {
 
             this.style.backgroundColor = 'rgb(233, 232, 232)'
 
-            
+            userMsgContainer.style.display = 'flex';
+            userChatsContainer.style.display = 'block';
+
             let div = `
             <div class="whichUser">
-            <img class="usersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
+            <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
             <h1 class="userName">${this.childNodes[3].innerText}</h1>
             </div>`
-            
+
             anotherUserId = this.id;
 
-            chatWhichUserContainer.innerHTML = div?div:'No users';
-
+            chatWhichUserContainer.innerHTML = div;
         })
     }
 
 }
 
+// logoutBtn.addEventListener("click",logoutFunc)
+
+// function logoutFunc() {
+
+//     signOut(auth).then(() => {
+//         // Sign-out successful.
+//         chatAppContainer[0].style.display = 'none'
+//         authContainer[0].style.display = 'flex'
+//         profileContainer.style.display = 'none'
+
+//     }).catch((error) => {
+//         // An error happened.
+//         alert(error.message)
+//     });
+// }

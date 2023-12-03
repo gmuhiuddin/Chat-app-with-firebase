@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat-app</title>
-    <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgb7NbndyulZT5WVMd8CLFQ4K2-Ayw7ArBg&usqp=CAU" type="image/x-icon">
+    <link rel="shortcut icon"
+        href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgb7NbndyulZT5WVMd8CLFQ4K2-Ayw7ArBg&usqp=CAU"
+        type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
+        <button id="logout-btn">Logout</button>
         <div id="loader">
             <div class="loader"></div>
         </div>
@@ -44,7 +49,8 @@
                     <br>
                     <input class="inputs" type="email" placeholder="Email" required id="user-email">
                     <br>
-                    <input class="inputs" minlength="8" placeholder="Password" type="password" required id="user-password">
+                    <input class="inputs" minlength="8" placeholder="Password" type="password" required
+                        id="user-password">
                     <br>
                     <button type="submit" id="sign-in-btn">Login</button>
                 </form>
@@ -61,13 +67,17 @@
             <div id="user-chat-container">
                 <div id="chat-which-user-container">
                 </div>
-            <div id="user-chats-container"></div>
-<div id="userMsg">
-
-</div>
+                <div id="user-chats-container"></div>
+                <div id="user-msg-container">
+                    <form id="msg-form">
+                        <input required placeholder="Type a message" type="text" class="user-msg">
+                        <button class="msg-send-btn">Send</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
