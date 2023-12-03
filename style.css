@@ -247,3 +247,36 @@ display: none;
     width: 100%;
     overflow: scroll;
 }
+
+#no-chat-display-container{
+    height: 99vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chats{
+    margin-left: 19px;
+    margin-right: 19px;
+display: inline-block;
+padding: 9px;
+margin: 9px;
+border-radius: 19px;
+}
+
+.user-messsage{
+    font-size: 23px;
+}
+.chat-time{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.userChat{
+    background-color: green;
+}
+
+.anotherUserChat{
+    background-color: gray;
+
+}

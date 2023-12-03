@@ -26,6 +26,8 @@ let userMsgContainer = document.getElementById('user-msg-container');
 let userChatsContainer = document.getElementById('users-chats-container');
 let logoutBtn = document.getElementById('logout-btn');
 let msgform = document.getElementById('msg-form');
+let noChatDisplaycontainer = document.getElementById('no-chat-display-container');
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
@@ -226,7 +228,7 @@ async function getUser() {
             userMsgContainer.style.display = 'flex';
             userChatsContainer.style.display = 'block';
             chatWhichUserContainer.style.display = 'block';
-
+            noChatDisplaycontainer.style.display = 'none'
             let div = `
             <div class="whichUser">
             <img class="whichusersImg" src="${this.childNodes[1].src ? this.childNodes[1].src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU'}" alt="user image">
@@ -270,7 +272,8 @@ msgform.addEventListener('submit', async (submitedForm) => {
         userMsg: submitedForm.target[0].value,
         userId: userId,
         otherUser: anotherUserId,
-        time: serverTimestamp()
+        time: serverTimestamp(),
+        chatId : generateChatId()
     }
 
     await addDoc(chatCollectionRef, obj)
@@ -279,18 +282,34 @@ msgform.addEventListener('submit', async (submitedForm) => {
 
 })
 
+function generateChatId() {
+    let chatId = userId > anotherUserId ? userId + anotherUserId : anotherUserId + userId
+  
+    return chatId
+  }
+
 async function getMsgs (){
 
-     let usersMsg = query(chatCollectionRef,orderBy('time'),where("userId","==",userId),where("otherUser","==",anotherUserId))
+     let usersMsg = query(chatCollectionRef,orderBy('time'),where("chatId","==", generateChatId()))
 
 onSnapshot(usersMsg,(doc) => {
     userChatsContainer.innerHTML = null;
     if(!doc.empty){
         doc.forEach((elements) => {
-        
+            
+let div = `
+    <div class="chats ${elements.data().userId == userId?'userChat':'anotherUserChat'}">
+    <span class="user-messsage">${elements.data().userMsg}</span>
+    <br>
+    <span class="chat-time">${dayjs(elements.data().time.toDate()).format('ddd-MM-YYYY hh:mm')}</span>
+    </div>
+    <br>
+`
+
+            userChatsContainer.innerHTML += div;
         })
     }else{
-        userChatsContainer.innerHTML = "<h1>No chats</h1>"
+        userChatsContainer.innerHTML = "<h1 style='text-align:center; margin-top:199px;'>No chats</h1>"
     }
 })
 
