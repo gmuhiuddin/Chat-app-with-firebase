@@ -11,7 +11,6 @@
 
 
 .container {
-    /* display: flex; */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -246,6 +245,7 @@
     height: 71vh;
     width: 100%;
     overflow: scroll;
+    grid-template-columns: 1fr auto;
 }
 
 #no-chat-display-container {
@@ -274,10 +274,12 @@
 }
 
 .userChat {
-    background-color: rgb(158, 230, 158);   
-    margin-left: 81.5%;
+    background-color: rgb(158, 230, 158);
+    justify-self: end;
 }
 
 .anotherUserChat {
     background-color: rgb(176, 169, 169);
+    justify-self: start;
+
 }
