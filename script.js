@@ -279,11 +279,6 @@ msgform.addEventListener('submit', async (submitedForm) => {
     await addDoc(chatCollectionRef, obj)
 
     submitedForm.target[0].value = '';
-
-    setTimeout(() => {
-        userChatsContainer.scrollTop = userChatsContainer.scrollHeight;
-
-    }, 100);
 })
 
 function generateChatId() {
@@ -312,6 +307,10 @@ async function getMsgs() {
 
                 userChatsContainer.innerHTML += div;
             })
+            setTimeout(() => {
+                userChatsContainer.scrollTop = userChatsContainer.scrollHeight;
+        
+            }, 100);
         } else {
             userChatsContainer.innerHTML = "<h1 style='text-align:center; margin-top:199px;'>No chats</h1>"
         }
