@@ -250,7 +250,7 @@ async function getUser() {
             noChatDisplaycontainer.style.display = "none";
             
             let div = `
-            <div class="whichUser">
+            <div id="${this.id}" class="whichUser">
             <img class="whichusersImg" src="${this.childNodes[1].src
                     ? this.childNodes[1].src
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
@@ -258,10 +258,11 @@ async function getUser() {
             <h1 class="userName">${this.childNodes[3].innerText}</h1>
             ${this.id == userId ? '<img id="profile-edit-img" src="https://cdn-icons-png.flaticon.com/128/11864/11864116.png" />':''}
             </div>`;
-
             anotherUserId = this.id;
-
+            
             chatWhichUserContainer.innerHTML = div;
+
+            profileAbc()
             getMsgs();
         });
     }
@@ -343,11 +344,23 @@ async function getMsgs() {
     });
 }
 
-setTimeout(() => {
-let profileEditImg = document.getElementById('profile-edit-img');
-    // profileEditImg.addEventListener('click',profileAbc)
-}, 2000);
 
 function profileAbc() {
-    console.log(this)
+
+    setTimeout(() => {
+        let profileEditImg = document.getElementById('profile-edit-img');
+        profileEditImg?.addEventListener('click',profileEdit)
+    }, 200);
+
+async function profileEdit(){
+
+    profileContainer[0].style.display = 'block';
+    chatAppContainer[0].style.display = 'none';
+
+    let colId = this.parentNode.id;
+    console.log(colId)
+    let userNameObj = await getDoc(doc(db, "userName", colId));
+    console.log(userNameObj)
+
+}
 }
