@@ -9,7 +9,6 @@
     font-family: poppins;
 }
 
-
 .container {
     justify-content: center;
     align-items: center;
@@ -19,7 +18,7 @@
 
 #sign-up {
     box-shadow: 1px 1px 7px black;
-    height: 485px;
+    height: 501px;
     width: 419px;
     display: block;
 }
@@ -34,9 +33,9 @@
 .inputs {
     display: block;
     margin: 0 auto;
-    width: 239px;
-    height: 31px;
-    border-radius: 9px;
+    width: 269px;
+    height: 33px;
+    border-radius: 11px;
     padding: 1px 9px;
     box-shadow: none;
     border: 1px solid rgb(98, 94, 94);
@@ -191,7 +190,7 @@
 
 #user-msg-container {
     display: none;
-        justify-content: center;
+    justify-content: center;
     width: 100%;
 }
 
@@ -287,4 +286,12 @@
     overflow-wrap: break-word;
     margin-right: auto;
 
+}
+
+#profile-edit-img{
+    height: 55px;
+    width: 55px;
+    margin-left: 3px;
+    background-color: white;
+    border-radius: 100%;
 }
