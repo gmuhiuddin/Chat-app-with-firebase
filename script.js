@@ -301,14 +301,13 @@ async function getMsgs() {
     <span class="user-messsage">${elements.data().userMsg}</span>
     <br>
     <span class="chat-time">${dayjs(elements.data().time.toDate()).format('DD-MM-YYYY hh:mm')}</span>
-    </div>
-`
+    </div>`
 
                 userChatsContainer.innerHTML += div;
             })
             setTimeout(() => {
                 userChatsContainer.scrollTop = userChatsContainer.scrollHeight;
-        
+
             }, 100);
         } else {
             userChatsContainer.innerHTML = "<h1 style='text-align:center; margin-top:199px;'>No chats</h1>"
