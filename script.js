@@ -226,7 +226,7 @@ async function getUser() {
             this.style.backgroundColor = 'rgb(233, 232, 232)'
 
             userMsgContainer.style.display = 'flex';
-            userChatsContainer.style.display = 'grid';
+            userChatsContainer.style.display = 'flex';
             chatWhichUserContainer.style.display = 'block';
             noChatDisplaycontainer.style.display = 'none'
             let div = `
@@ -302,7 +302,6 @@ async function getMsgs() {
     <br>
     <span class="chat-time">${dayjs(elements.data().time.toDate()).format('DD-MM-YYYY hh:mm')}</span>
     </div>
-    <br />
 `
 
                 userChatsContainer.innerHTML += div;
