@@ -22,6 +22,7 @@ import {
     onSnapshot,
     orderBy,
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js";
 
 let signUpUserName = document.getElementById("sign-up-user-first-name");
 let signUpUserLastName = document.getElementById("sign-up-user-last-name");
@@ -49,6 +50,13 @@ let logoutBtn = document.getElementById("logout-btn");
 let msgform = document.getElementById("msg-form");
 let noChatDisplaycontainer = document.getElementById("no-chat-display-container");
 
+let imageInput = document.getElementById('imageInput');
+let selectedImage = document.getElementById('selectedImage');
+let updateBtn = document.getElementById('updateBtn');
+let userFirtsNameForEdit = document.getElementById('userFirtsNameForEdit');
+let userLastNameForEdit = document.getElementById('userLastNameForEdit');
+let userEmailForEdit = document.getElementById('userEmailForEdit');
+
 const firebaseConfig = {
     apiKey: "AIzaSyBl_MgCYaWNcQxbCDFEIem0KT_scTJ2NIc",
     authDomain: "chat-app-9e4d1.firebaseapp.com",
@@ -61,10 +69,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 let db = getFirestore(app);
+let storage = getStorage(app)
 let userId = "";
 let userName = "";
 let anotherUserId = "";
 let chatCollectionRef = collection(db, "userMsgs");
+let storageRef = ref(storage, `usersImages/${userId}`);
+let userDivId = '';
 
 // Authentication code
 
@@ -84,6 +95,7 @@ onAuthStateChanged(auth, async (user) => {
         userName = `${firstname} ${lastname}`;
 
         getUser();
+        profileBydefault()
         // ...
     } else {
         // User is signed out
@@ -201,8 +213,9 @@ async function getUser() {
     let you = await getDocs(q);
 
     you.forEach((element) => {
+        userDivId = element.id
         let div = `
-        <div id="${element.data().userId}" class="users">
+        <div id="${element.id}" class="users">
             <img class="usersImg" src="${element.data().userImg
                 ? element.data().userImg
                 : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
@@ -248,7 +261,7 @@ async function getUser() {
             userChatsContainer.style.display = "flex";
             chatWhichUserContainer.style.display = "block";
             noChatDisplaycontainer.style.display = "none";
-            
+
             let div = `
             <div id="${this.id}" class="whichUser">
             <img class="whichusersImg" src="${this.childNodes[1].src
@@ -256,13 +269,15 @@ async function getUser() {
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
                 }" alt="user image">
             <h1 class="userName">${this.childNodes[3].innerText}</h1>
-            ${this.id == userId ? '<img id="profile-edit-img" src="https://cdn-icons-png.flaticon.com/128/11864/11864116.png" />':''}
+            ${this.id == userId ? `<img id="profile-edit-img" src="https://cdn-icons-png.flaticon.com/128/11864/11864116.png" />` : ''}
             </div>`;
             anotherUserId = this.id;
-            
+
             chatWhichUserContainer.innerHTML = div;
 
-            profileAbc()
+            let profileEditImg = document.getElementById('profile-edit-img');
+            profileEditImg?.addEventListener('click', showProfileEditPage)
+
             getMsgs();
         });
     }
@@ -312,6 +327,7 @@ function generateChatId() {
 }
 
 async function getMsgs() {
+
     let usersMsg = query(
         chatCollectionRef,
         orderBy("time"),
@@ -345,22 +361,48 @@ async function getMsgs() {
 }
 
 
-function profileAbc() {
+async function profileBydefault() {
+    let userObj = await getDoc(doc(db, "userName", userId));
 
-    setTimeout(() => {
-        let profileEditImg = document.getElementById('profile-edit-img');
-        profileEditImg?.addEventListener('click',profileEdit)
-    }, 200);
+    userFirtsNameForEdit.value = userObj.data().firstname;
+    userLastNameForEdit.value = userObj.data().lastname;
+    userEmailForEdit.value = userObj.data().userEmail;
+    selectedImage.src = userObj.data().userImg ? userObj.data().userImg : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU';
+}
 
-async function profileEdit(){
 
+async function showProfileEditPage() {
     profileContainer[0].style.display = 'block';
     chatAppContainer[0].style.display = 'none';
-
-    let colId = this.parentNode.id;
-    console.log(colId)
-    let userNameObj = await getDoc(doc(db, "userName", colId));
-    console.log(userNameObj)
-
 }
+
+updateBtn.addEventListener('click',profileEdit)
+
+function profileEdit (){
+    
+    let obj = {
+        firstname: userFirtsNameForEdit.value,
+        lastname:userLastNameForEdit.value,
+    }
+
+    updateDoc(doc(db, "userName", userDivId), obj);
+
+    profileBydefault()
+
+    profileContainer[0].style.display = 'none';
+    chatAppContainer[0].style.display = 'flex';
 }
+
+imageInput.addEventListener('change',async () => {
+    
+await uploadBytes(storageRef, imageInput.files[0]).then((snapshot) => {
+    console.log('file is uploaded succesfully')
+    getDownloadURL(storageRef).then(async (url) => {
+        let obj = {
+            userImg: url
+        }
+        await updateDoc(doc(db, 'userName', userDivId), obj)
+        profileBydefault()
+    })
+})
+})

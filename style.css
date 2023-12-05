@@ -296,7 +296,49 @@
 
 .update-div{
     height: 91vh;
-    margin:29px auto;
+    margin-top: 27px !important;
+    margin: 0 auto;
     width: 39%;
     box-shadow: 0px 0px 5px rgb(98, 94, 94);
+}
+
+#selectedImage{
+    border-radius: 19px;
+    margin: 0 auto;
+    width: auto;
+    height: auto;
+    max-height: 295px;
+    max-width: 367px;
+}
+
+#imageInput {
+    font-size: 19px;
+    width: 339px;
+    display: block;
+    margin: 0 auto;
+    margin: 0 auto;
+}
+
+.updateInput {
+    border-radius: 7px;
+    outline: none;
+    border: 2px solid gray;
+    height: 37px;
+    width: 329px;
+    margin: 0 auto;
+    display: block;
+    font-size: 17px;
+}
+
+#updateBtn {
+    display: block;
+    margin: 0 auto;
+    height: 41px;
+    width: 219px;
+    background-color: rgb(91, 229, 91);
+    color: white;
+    border: none;
+    font-size: 21px;
+    border-radius: 12px;
+    cursor: pointer;
 }
