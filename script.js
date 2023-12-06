@@ -362,6 +362,7 @@ async function getMsgs() {
 
 
 async function profileBydefault() {
+
     let userObj = await getDoc(doc(db, "userName", userId));
 
     userFirtsNameForEdit.value = userObj.data().firstname;
@@ -378,19 +379,18 @@ async function showProfileEditPage() {
 
 updateBtn.addEventListener('click',profileEdit)
 
-function profileEdit (){
+async function profileEdit (){
     
     let obj = {
         firstname: userFirtsNameForEdit.value,
         lastname:userLastNameForEdit.value,
     }
 
-    updateDoc(doc(db, "userName", userDivId), obj);
+    await updateDoc(doc(db, "userName", userDivId), obj);
 
     profileBydefault()
 
-    profileContainer[0].style.display = 'none';
-    chatAppContainer[0].style.display = 'flex';
+    window.location.reload()
 }
 
 imageInput.addEventListener('change',async () => {
