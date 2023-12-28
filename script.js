@@ -74,7 +74,6 @@ let userId = "";
 let userName = "";
 let anotherUserId = "";
 let chatCollectionRef = collection(db, "userMsgs");
-let storageRef = ref(storage, `usersImages/${userId}`);
 let userDivId = '';
 
 // Authentication code
@@ -394,6 +393,9 @@ async function profileEdit (){
 }
 
 imageInput.addEventListener('change',async () => {
+
+    let storageRef = ref(storage, `usersImages/${userId}`);
+
     
 await uploadBytes(storageRef, imageInput.files[0]).then((snapshot) => {
     console.log('file is uploaded succesfully')
@@ -403,6 +405,6 @@ await uploadBytes(storageRef, imageInput.files[0]).then((snapshot) => {
         }
         await updateDoc(doc(db, 'userName', userDivId), obj)
         profileBydefault()
-    })
+    })   
 })
 })
