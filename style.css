@@ -288,13 +288,13 @@
 
 }
 
-#profile-edit-img{
+#profile-edit-img {
     height: 55px;
     width: 55px;
     margin-left: 3px;
 }
 
-.update-div{
+.update-div {
     height: 93vh;
     margin-top: 17px !important;
     margin: 0 auto;
@@ -302,7 +302,7 @@
     box-shadow: 0px 0px 5px rgb(98, 94, 94);
 }
 
-#selectedImage{
+#selectedImage {
     border-radius: 19px;
     margin: 0 auto;
     width: auto;

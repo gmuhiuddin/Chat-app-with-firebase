@@ -49,7 +49,6 @@ let userChatsContainer = document.getElementById("users-chats-container");
 let logoutBtn = document.getElementById("logout-btn");
 let msgform = document.getElementById("msg-form");
 let noChatDisplaycontainer = document.getElementById("no-chat-display-container");
-
 let imageInput = document.getElementById('imageInput');
 let selectedImage = document.getElementById('selectedImage');
 let updateBtn = document.getElementById('updateBtn');
@@ -118,7 +117,6 @@ signUpRepeatPassword.addEventListener("focus", () => {
 
 signUpForm.addEventListener("submit", (a) => {
     a.preventDefault();
-
     if (signUpPassword.value == signUpRepeatPassword.value) {
         createUserWithEmailAndPassword(
             auth,
@@ -232,7 +230,7 @@ async function getUser() {
 
     users.forEach((element) => {
         let div = `
-        <div id="${element.data().userId}" class="users">
+        <div onClick="userDivChangeColor(this)" id="${element.data().userId}" class="users">
             <img class="usersImg" src="${element.data().userImg
                 ? element.data().userImg
                 : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
@@ -246,40 +244,38 @@ async function getUser() {
 
     let usersDiv = document.getElementsByClassName("users");
 
-    for (let i = 0; i < usersDiv.length; i++) {
-        usersDiv[i].addEventListener("click", function () {
-            chatWhichUserContainer.innerHTML = null;
+    window.userDivChangeColor = function (divThis) {
+        chatWhichUserContainer.innerHTML = null;
 
-            for (let i = 0; i < usersDiv.length; i++) {
-                usersDiv[i].style.backgroundColor = "white";
-            }
+        for (let i = 0; i < usersDiv.length; i++) {
+            usersDiv[i].style.backgroundColor = "white";
+        }
 
-            this.style.backgroundColor = "rgb(233, 232, 232)";
+        divThis.style.backgroundColor = "rgb(233, 232, 232)";
 
-            userMsgContainer.style.display = "flex";
-            userChatsContainer.style.display = "flex";
-            chatWhichUserContainer.style.display = "block";
-            noChatDisplaycontainer.style.display = "none";
+        userMsgContainer.style.display = "flex";
+        userChatsContainer.style.display = "flex";
+        chatWhichUserContainer.style.display = "block";
+        noChatDisplaycontainer.style.display = "none";
 
-            let div = `
-            <div id="${this.id}" class="whichUser">
-            <img class="whichusersImg" src="${this.childNodes[1].src
-                    ? this.childNodes[1].src
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
-                }" alt="user image">
-            <h1 class="userName">${this.childNodes[3].innerText}</h1>
-            ${this.id == userId ? `<img id="profile-edit-img" src="https://cdn-icons-png.flaticon.com/128/11864/11864116.png" />` : ''}
+        let div = `
+            <div id="${divThis.id}" class="whichUser">
+            <img class="whichusersImg" src="${divThis.childNodes[1].src
+                ? divThis.childNodes[1].src
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3wksm3opkFrzaOCjlGYwLvKytFXdtB5ukWQ&usqp=CAU"
+            }" alt="user image">
+            <h1 class="userName">${divThis.childNodes[3].innerText}</h1>
+            ${divThis.id == userId ? `<img id="profile-edit-img" src="https://cdn-icons-png.flaticon.com/128/11864/11864116.png" />` : ''}
             </div>`;
-            anotherUserId = this.id;
+        anotherUserId = divThis.id;
 
-            chatWhichUserContainer.innerHTML = div;
+        chatWhichUserContainer.innerHTML = div;
 
-            let profileEditImg = document.getElementById('profile-edit-img');
-            profileEditImg?.addEventListener('click', showProfileEditPage)
+        let profileEditImg = document.getElementById('profile-edit-img');
+        profileEditImg?.addEventListener('click', showProfileEditPage)
 
-            getMsgs();
-        });
-    }
+        getMsgs();
+    };
 }
 
 logoutBtn.addEventListener("click", logoutFunc);
@@ -359,7 +355,6 @@ async function getMsgs() {
     });
 }
 
-
 async function profileBydefault() {
 
     let userObj = await getDoc(doc(db, "userName", userId));
@@ -376,13 +371,13 @@ async function showProfileEditPage() {
     chatAppContainer[0].style.display = 'none';
 }
 
-updateBtn.addEventListener('click',profileEdit)
+updateBtn.addEventListener('click', profileEdit)
 
-async function profileEdit (){
-    
+async function profileEdit() {
+
     let obj = {
         firstname: userFirtsNameForEdit.value,
-        lastname:userLastNameForEdit.value,
+        lastname: userLastNameForEdit.value,
     }
 
     await updateDoc(doc(db, "userName", userDivId), obj);
@@ -392,19 +387,19 @@ async function profileEdit (){
     window.location.reload()
 }
 
-imageInput.addEventListener('change',async () => {
+imageInput.addEventListener('change', async () => {
 
     let storageRef = ref(storage, `usersImages/${userId}`);
 
-    
-await uploadBytes(storageRef, imageInput.files[0]).then((snapshot) => {
-    console.log('file is uploaded succesfully')
-    getDownloadURL(storageRef).then(async (url) => {
-        let obj = {
-            userImg: url
-        }
-        await updateDoc(doc(db, 'userName', userDivId), obj)
-        profileBydefault()
-    })   
-})
+
+    await uploadBytes(storageRef, imageInput.files[0]).then((snapshot) => {
+        console.log('file is uploaded succesfully')
+        getDownloadURL(storageRef).then(async (url) => {
+            let obj = {
+                userImg: url
+            }
+            await updateDoc(doc(db, 'userName', userDivId), obj)
+            profileBydefault()
+        })
+    })
 })
