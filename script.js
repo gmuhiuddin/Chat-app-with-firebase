@@ -331,23 +331,25 @@ async function getMsgs() {
 
     onSnapshot(usersMsg, (doc) => {
         userChatsContainer.innerHTML = null;
+        
         if (!doc.empty) {
             doc.forEach((elements) => {
-                let div = `
-    <div class="chats ${elements.data().userId == userId ? "userChat" : "anotherUserChat"
-                    }">
-    <span class="user-messsage">${elements.data().userMsg}</span>
-    <br>
-    <span class="chat-time">${dayjs(elements.data().time.toDate()).format(
-                        "DD-MM-YYYY hh:mm"
-                    )}</span>
-    </div>`;
+                let div = `<div class="chats ${elements.data().userId == userId ? "userChat" : "anotherUserChat"
+            }">
+<span class="user-messsage">${elements.data().userMsg}</span>
+<br>
+<span class="chat-time">${dayjs(elements.data().time.toDate()).format(
+                "DD-MM-YYYY hh:mm"
+            )}</span>
+</div>`;
 
                 userChatsContainer.innerHTML += div;
             });
+
             setTimeout(() => {
                 userChatsContainer.scrollTop = userChatsContainer.scrollHeight;
             }, 100);
+
         } else {
             userChatsContainer.innerHTML =
                 "<h1 style='text-align:center; margin-top:199px;'>No chats</h1>";
